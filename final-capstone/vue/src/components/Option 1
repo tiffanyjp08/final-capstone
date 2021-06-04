@@ -1,0 +1,55 @@
+<template>
+  <div>
+    <input type="text" v-model="search" placeholder="Select a user" />
+
+    <div v-show="search" v-for="user in filteredUsers" :key="user.email">
+      {{ user.firstName }} {{ user.lastName }} {{ user.email }}
+    </div>
+  </div>
+</template>
+
+<script>
+import userDetailsService from "../services/UserDetailsService";
+export default {
+  name: "name",
+  data() {
+    return {
+      users: [],
+      search: "",
+    };
+  },
+  created() {
+    userDetailsService
+      .list()
+      .then((userData) => {
+        this.users = userData.data;
+      })
+      .catch((err) => {
+        console.err(err + "Missing users!");
+      });
+  },
+  computed: {
+    filteredUsers() {
+      return this.users.filter((user) => {
+        return (
+          user.firstName.match(this.search) ||
+          user.lastName.match(this.search) ||
+          user.email.match(this.search)
+        );
+      });
+    },
+  },
+};
+</script>
+
+<style>
+.users {
+  margin: 20px;
+  width: 20%;
+  background-color: cornflowerblue;
+}
+</style>
+
+
+NOTES
+-WOULD NEED TO ADD CHECKBOX and ADD BUTTON
